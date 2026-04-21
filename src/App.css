@@ -1,0 +1,283 @@
+/* 🌍 RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 🌌 FONDO GENERAL */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  min-height: 100vh;
+  color: #333;
+}
+
+/* 📦 CONTENEDOR GENERAL */
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.2);
+}
+
+/* 🧠 TITULOS */
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+/* 🔐 AUTH (LOGIN / REGISTER) */
+.auth {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth input, .auth select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  transition: 0.2s;
+}
+
+.auth input:focus, .auth select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 5px rgba(79,70,229,0.4);
+}
+
+.auth button {
+  padding: 12px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth button:hover {
+  background: #4338ca;
+  transform: scale(1.03);
+}
+
+.auth p {
+  text-align: center;
+  color: #4f46e5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.auth p:hover {
+  text-decoration: underline;
+}
+
+/* 🧾 FORMULARIOS */
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 5px rgba(79,70,229,0.3);
+}
+
+/* 🔘 BOTONES */
+button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #4338ca;
+  transform: scale(1.05);
+}
+
+/* ❌ BOTON ELIMINAR */
+button.danger {
+  background: #ef4444;
+}
+
+button.danger:hover {
+  background: #dc2626;
+}
+
+/* 📅 CONTENEDOR */
+.calendar-section {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+/* 📦 CALENDARIO GENERAL */
+.react-calendar {
+  border: none !important;
+  border-radius: 20px;
+  padding: 20px;
+  background: rgb(0, 0, 0);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* 🔝 HEADER */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.react-calendar__navigation button {
+  background: transparent;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  color: #4f46e5;
+  cursor: pointer;
+}
+
+/* 📆 DÍAS DE LA SEMANA */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  color: #000000;
+  margin-bottom: 5px;
+}
+
+/* 📅 CELDAS */
+.react-calendar__tile {
+  border-radius: 12px;
+  padding: 12px 0;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+/* HOVER */
+.react-calendar__tile:hover {
+  background: #000000;
+}
+
+/* DÍA ACTIVO */
+.react-calendar__tile--active {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+  color: rgb(0, 0, 0) !important;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+/* HOY */
+.react-calendar__tile--now {
+  background: #000000;
+  border-radius: 12px;
+}
+
+/* FINES DE SEMANA */
+.react-calendar__month-view__days__day--weekend {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* DÍAS FUERA DEL MES */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #000000;
+}
+
+/* 🔽 QUITAR ESTILO RARO DE BOTONES */
+.react-calendar button {
+  border: none;
+}
+
+/* 🔥 ANIMACIÓN SUAVE */
+.react-calendar__tile:active {
+  transform: scale(0.95);
+}
+
+/* 📊 TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  overflow: hidden;
+  border-radius: 15px;
+  background: rgb(0, 0, 0);
+}
+
+th {
+  background: #4f46e5;
+  color: white;
+  padding: 12px;
+  font-weight: 500;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+  background: #f5f7ff;
+}
+
+/* 📈 RESUMEN */
+.resumen {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.resumen p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.resumen .ok {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.resumen .bad {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 600px) {
+  .container {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  .auth {
+    margin: 40px 20px;
+  }
+}

@@ -1,0 +1,332 @@
+/* 🌍 BASE */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+}
+
+/* 📦 CONTENEDOR */
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* 🧠 HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 22px;
+  color: black;
+}
+
+/* 🏷️ BADGE */
+.badge {
+  margin-left: 10px;
+  background: #6366f1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* 🔘 BOTONES */
+button {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border: none;
+  padding: 10px 16px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+/* ❌ BOTÓN ELIMINAR */
+.danger {
+  background: #dc2626;
+}
+
+.danger:hover {
+  background: #b91c1c;
+}
+
+/* 🧾 FORMULARIO */
+.form {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  background: #111827;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.form input,
+.form select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: white;
+  color: rgb(0, 0, 0);
+}
+
+/* 🔍 BUSCADOR */
+.search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: white;
+  color: black;
+}
+
+/* 📅 CALENDARIO */
+.calendar-section {
+  background: #111827;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+/* 🔥 DÍAS CON REGISTROS */
+.highlight {
+  background: #6366f1 !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+/* 📌 TÍTULOS DE SECCIÓN */
+.section-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #111827;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 📊 TABLAS */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #111827;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+th {
+  background: #9b9696;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: center;
+}
+
+td {
+  font-size: 14px;
+}
+
+tr:nth-child(even) {
+  background: #1f2937;
+}
+
+/* 📅 PERIOD SELECTOR */
+.period-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  background: #1e293b;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+}
+
+.period-selector label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #94a3b8;
+}
+
+/*  METRICS CARDS */
+.metrics-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metric-card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.metric-label {
+  font-size: 13px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.metric-sub {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #334155;
+  border-radius: 10px;
+  margin-top: 15px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+.ok {
+  color: #00ff4c;
+  font-weight: bold;
+}
+
+.bad {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+}
+
+/* ✨ NOTIFICACIONES (TOASTS) */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: slideIn 0.3s ease-out;
+}
+.toast.error { background: #ef4444; border-left: 5px solid #b91c1c; }
+.toast.success { background: #10b981; border-left: 5px solid #059669; }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* 🛡️ MODAL DE CONFIRMACIÓN */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 400px;
+  border: 1px solid #334155;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: #64748b;
+}
+
+/* 🧱 LAYOUT PARA FOOTER */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1; /* Esto empuja el footer hacia abajo */
+}
+
+/* 👣 FOOTER */
+.footer {
+  background: #0b1220;
+  padding: 30px 20px;
+  text-align: center;
+  border-top: 1px solid #1e293b;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 40px;
+}
+
+.footer strong {
+  color: #6366f1;
+}
