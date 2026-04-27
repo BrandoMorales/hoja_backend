@@ -122,6 +122,30 @@ export default function Dashboard({ user, logout }) {
 
     const calc = calcular();
 
+    // Validar que no se intenten registrar horas negativas o cero (excepto en vacaciones automáticas)
+    if (calc.horas <= 0 && form.tipo !== "vacaciones") {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Horas inválidas',
+        text: 'Por favor, ingresa un número de horas mayor a 0.',
+      });
+      return;
+    }
+
+    // Validar que no se superen las 24 horas en un mismo día para el usuario
+    const horasYaRegistradas = registros
+      .filter(r => r.fecha === form.fecha && r.user === user.email)
+      .reduce((acc, r) => acc + Number(r.horas), 0);
+
+    if (horasYaRegistradas + calc.horas > 24) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Límite de horas excedido',
+        text: `No es posible registrar más de 24 horas en un día. Ya tienes ${horasYaRegistradas}h registradas para esta fecha.`,
+      });
+      return;
+    }
+
     if (form.tipo === "vacaciones" && calc.horas === 0) {
       Swal.fire({
         icon: 'warning',
@@ -150,12 +174,16 @@ export default function Dashboard({ user, logout }) {
       
       if (response.ok) {
         loadRegistros();
+        Swal.fire({ icon: 'success', title: 'Registro guardado', timer: 1000, showConfirmButton: false });
         setForm({
           fecha: "",
           horas: "",
           tipo: "normal",
           proyecto: "",
         });
+      } else {
+        const errData = await response.json();
+        Swal.fire('No se pudo guardar', errData.message, 'error');
       }
     } catch (error) {
       Swal.fire("Error", "No se pudo conectar con el servidor", "error");
@@ -360,10 +388,10 @@ export default function Dashboard({ user, logout }) {
           <input
             type="number"
             placeholder="Horas"
+            min="0"
+            max="24"
             value={form.horas}
-            onChange={(e) =>
-              setForm({ ...form, horas: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, horas: e.target.value })}
           />
 
           <select
