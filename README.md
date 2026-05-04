@@ -9,14 +9,15 @@ Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/E
 - **Autenticación Segura:** Registro e inicio de sesión con roles diferenciados (Administrador y Trabajador).
 - **Gestión de Horas:** Registro detallado de jornadas (Normal, Festivo, Sábado, Domingo, Vacaciones).
 - **Lógica de Nómina Colombiana:** 
-    - Cálculo basado en el divisor de **220 horas mensuales**.
-    - Recargos automáticos del **75% (factor 1.75)** para domingos y festivos.
-    - Cálculo automático de horas de vacaciones (8h en días hábiles).
+  - Cálculo basado en el divisor de **220 horas mensuales**.
+  - Recargos automáticos del **75% (factor 1.75)** para domingos y festivos.
+  - Cálculo automático de horas de vacaciones (8h en días hábiles).
 - **Panel de Administrador:** 
-    - Visualización de métricas en tiempo real (KPIs).
-    - Asignación dinámica de salarios base por trabajador.
-    - Sistema de aprobación manual ("chuleo").
-    - Análisis de inversión por proyecto.
+  - Visualización de métricas en tiempo real (KPIs).
+  - Asignación dinámica de salarios base por trabajador.
+  - Listas desplegables dinámicas para Proyectos, Clientes y Responsables.
+  - Sistema de aprobación manual ("chuleo").
+  - Análisis de inversión por proyecto.
 - **Persistencia Total:** Migración completa de `localStorage` a **MySQL** para seguridad y multiusuario.
 
 ## 🛠️ Requisitos Técnicos
@@ -35,8 +36,8 @@ Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/E
 
 ## 🗄️ Configuración de la Base de Datos
 
-1. Abre tu gestor de base de datos (ej. HeidiSQL).
-2. Crea una base de datos llamada `nomina_app`.
+1. Abre tu gestor de base de datos preferido (HeidiSQL, MySQL Workbench, XAMPP).
+2. Crea una base de datos llamada **`nomina_app`**.
 3. Ejecuta el siguiente script para crear las tablas necesarias:
 
 ```sql
@@ -44,7 +45,7 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    cedula VARCHAR(20) UNIQUE, -- Nuevo campo
+    cedula VARCHAR(20) UNIQUE,
     password VARCHAR(255) NOT NULL, 
     role ENUM('admin', 'trabajador') NOT NULL
 );
@@ -57,9 +58,9 @@ CREATE TABLE records (
     horas DECIMAL(10, 2) NOT NULL,
     pago DECIMAL(15, 2) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
-    projectNumber VARCHAR(50), -- Nuevo campo
-    client VARCHAR(255),        -- Nuevo campo
-    coordinator VARCHAR(255),   -- Nuevo campo
+    projectNumber VARCHAR(50),
+    client VARCHAR(255),
+    coordinator VARCHAR(255),
     proyecto VARCHAR(255),
     FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
 );
@@ -67,6 +68,12 @@ CREATE TABLE records (
 CREATE TABLE user_salaries (
     user_email VARCHAR(255) PRIMARY KEY,
     salary DECIMAL(15, 2) NOT NULL,
+    FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
+);
+
+CREATE TABLE user_approvals (
+    user_email VARCHAR(255) PRIMARY KEY,
+    approved BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
 );
 ```
