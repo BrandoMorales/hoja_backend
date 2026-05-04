@@ -1,6 +1,6 @@
 # 💰 Nómina Pro - Gestión Empresarial Integrada
 
-Sistema integral para la gestión de horas laboradas, cálculo de nómina y análisis de proyectos, optimizado específicamente para la legislación laboral de **Colombia (COP)**. 
+Sistema integral para la gestión de horas laboradas, cálculo de nómina y análisis de proyectos, optimizado específicamente para la legislación laboral de **Colombia (COP)**.
 
 Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/Express** en el backend y **MySQL** como base de datos persistente.
 
@@ -8,11 +8,11 @@ Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/E
 
 - **Autenticación Segura:** Registro e inicio de sesión con roles diferenciados (Administrador y Trabajador).
 - **Gestión de Horas:** Registro detallado de jornadas (Normal, Festivo, Sábado, Domingo, Vacaciones).
-- **Lógica de Nómina Colombiana:** 
+- **Lógica de Nómina Colombiana:**
   - Cálculo basado en el divisor de **220 horas mensuales**.
   - Recargos automáticos del **75% (factor 1.75)** para domingos y festivos.
   - Cálculo automático de horas de vacaciones (8h en días hábiles).
-- **Panel de Administrador:** 
+- **Panel de Administrador:**
   - Visualización de métricas en tiempo real (KPIs).
   - Asignación dinámica de salarios base por trabajador.
   - Listas desplegables dinámicas para Proyectos, Clientes y Responsables.
@@ -30,9 +30,10 @@ Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/E
 
 1. **Clonar o descargar** el repositorio en tu carpeta local.
 2. Abrir una terminal en la carpeta raíz del proyecto y ejecutar:
-   ```bash
-   npm install
-   ```
+
+```bash
+ npm install
+```
 
 ## 🗄️ Configuración de la Base de Datos
 
