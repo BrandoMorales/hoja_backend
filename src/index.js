@@ -43,13 +43,13 @@ initializeDatabase();
 
 // --- Rutas de Autenticación ---
 app.post('/api/register', async (req, res) => {
-  const { nombre, email, password, role } = req.body;
+  const { nombre, email, password, role, cedula } = req.body; // Añadir cedula
   try {
     const [rows] = await pool.execute('SELECT email FROM users WHERE email = ?', [email]);
     if (rows.length > 0) {
       return res.status(400).json({ message: 'El usuario ya existe.' });
     }
-    await pool.execute('INSERT INTO users (nombre, email, password, role) VALUES (?, ?, ?, ?)', [nombre, email, password, role]);
+    await pool.execute('INSERT INTO users (nombre, email, password, role, cedula) VALUES (?, ?, ?, ?, ?)', [nombre, email, password, role, cedula]); // Insertar cedula
     res.status(201).json({ message: 'Usuario registrado con éxito.' });
   } catch (error) {
     console.error('Error al registrar usuario:', error);
@@ -59,8 +59,8 @@ app.post('/api/register', async (req, res) => {
 
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
-  try {
-    const [rows] = await pool.execute('SELECT nombre, email, role FROM users WHERE email = ? AND password = ?', [email, password]);
+  try { 
+    const [rows] = await pool.execute('SELECT nombre, email, role, cedula FROM users WHERE email = ? AND password = ?', [email, password]); // Seleccionar cedula
     if (rows.length === 0) {
       return res.status(401).json({ message: 'Correo o contraseña incorrectos.' });
     }
@@ -74,7 +74,7 @@ app.post('/api/login', async (req, res) => {
 // --- Ruta para obtener todos los usuarios (Solo para el Admin) ---
 app.get('/api/users', async (req, res) => {
   try {
-    const [rows] = await pool.execute('SELECT nombre, email, role FROM users WHERE role != "admin"');
+    const [rows] = await pool.execute('SELECT nombre, email, role, cedula FROM users WHERE role != "admin"'); // Seleccionar cedula
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
@@ -85,8 +85,8 @@ app.get('/api/users', async (req, res) => {
 // --- Rutas de Registros de Nómina ---
 app.get('/api/records', async (req, res) => {
   const { email, role } = req.query;
-  try {
-    let query = "SELECT id, user_email AS user, nombre, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha, horas, pago, tipo, proyecto FROM records"; // 👈 Aseguramos el alias "user"
+  try { 
+    let query = "SELECT id, user_email AS user, nombre, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha, horas, pago, tipo, proyecto, projectNumber, client, coordinator FROM records"; // Añadir nuevos campos
     let params = [];
     if (role !== 'admin') {
       query += " WHERE user_email = ?";
@@ -101,11 +101,11 @@ app.get('/api/records', async (req, res) => {
 });
 
 app.post('/api/records', async (req, res) => {
-  const { user, nombre, fecha, horas, pago, tipo, proyecto } = req.body;
+  const { user, nombre, fecha, horas, pago, tipo, proyecto, projectNumber, client, coordinator } = req.body; // Añadir nuevos campos
   try {
     const [result] = await pool.execute(
-      'INSERT INTO records (user_email, nombre, fecha, horas, pago, tipo, proyecto) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [user, nombre, fecha, horas, pago, tipo, proyecto]
+      'INSERT INTO records (user_email, nombre, fecha, horas, pago, tipo, proyecto, projectNumber, client, coordinator) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', // Insertar nuevos campos
+      [user, nombre, fecha, horas, pago, tipo, proyecto, projectNumber, client, coordinator]
     );
     res.status(201).json({ id: result.insertId, ...req.body });
   } catch (error) {
@@ -183,7 +183,8 @@ app.post('/api/config/approvals', async (req, res) => {
 // Vaciar historial (Admin)
 app.delete('/api/records-all', async (req, res) => {
   try {
-    await pool.execute('DELETE FROM records');
+    // TRUNCATE elimina los datos y reinicia el contador AUTO_INCREMENT a 1
+    await pool.execute('TRUNCATE TABLE records');
     res.json({ message: 'Historial vaciado.' });
   } catch (error) {
     console.error('Error al vaciar historial:', error);

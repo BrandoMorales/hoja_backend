@@ -37,7 +37,7 @@ export default function Login({ goToRegister, setUser }) {
       });
 
       if (response.ok) {
-        const userFound = await response.json();
+        const userFound = await response.json(); // Ahora incluirá la cédula
         setRolStyle(userFound.role === "admin" ? "admin" : "worker");
 
         Swal.fire({

@@ -44,7 +44,8 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    cedula VARCHAR(20) UNIQUE, -- Nuevo campo
+    password VARCHAR(255) NOT NULL, 
     role ENUM('admin', 'trabajador') NOT NULL
 );
 
@@ -56,6 +57,9 @@ CREATE TABLE records (
     horas DECIMAL(10, 2) NOT NULL,
     pago DECIMAL(15, 2) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
+    projectNumber VARCHAR(50), -- Nuevo campo
+    client VARCHAR(255),        -- Nuevo campo
+    coordinator VARCHAR(255),   -- Nuevo campo
     proyecto VARCHAR(255),
     FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
 );

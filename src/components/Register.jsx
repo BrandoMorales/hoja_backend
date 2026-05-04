@@ -6,6 +6,7 @@ export default function Register({ goToLogin }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    cedula: "", // Nuevo campo
     password: "",
     rol: ""
   });
@@ -22,7 +23,7 @@ export default function Register({ goToLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.email || !form.password || !form.rol) {
+    if (!form.name || !form.email || !form.cedula || !form.password || !form.rol) {
       Swal.fire({
         icon: 'warning',
         title: 'Campos incompletos',
@@ -34,6 +35,7 @@ export default function Register({ goToLogin }) {
     const nuevoUsuario = {
       nombre: form.name,
       email: form.email,
+      cedula: form.cedula, // Incluir cédula
       password: form.password,
       role: form.rol === "admin" ? "admin" : "trabajador"
     };
@@ -79,6 +81,13 @@ export default function Register({ goToLogin }) {
           type="email"
           name="email"
           placeholder="Correo electrónico"
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="cedula"
+          placeholder="Número de Identificación (Cédula)"
           onChange={handleChange}
         />
 
