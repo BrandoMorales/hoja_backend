@@ -644,7 +644,11 @@ export default function Dashboard({ user, logout }) {
     if (form.tipo === "vacaciones") {
       horas = esFinDeSemana ? 0 : 8;
       factorRecargo = 1.0;
-    } else if (form.tipo === "domingo" || form.tipo === "festivo" || diaSemana === 0) {
+    } else if (form.tipo === "festivo") {
+      // Festivos no se trabajan según requerimiento
+      horas = 0;
+      factorRecargo = 0;
+    } else if (form.tipo === "domingo" || diaSemana === 0) {
       // Recargo dominical/festivo legal (75% adicional)
       factorRecargo = 1.75;
     }
@@ -657,8 +661,8 @@ export default function Dashboard({ user, logout }) {
 
   // 🔹 AGREGAR
   const agregar = async () => {
-    // Permitimos agregar sin horas si es vacaciones (porque se calculan solas)
-    if (!form.fecha || (form.tipo !== "vacaciones" && !form.horas)) {
+    // Permitimos agregar sin horas si es vacaciones o festivo
+    if (!form.fecha || (form.tipo !== "vacaciones" && form.tipo !== "festivo" && !form.horas)) {
       Swal.fire({
         icon: 'error',
         title: 'Campos incompletos',
@@ -669,8 +673,8 @@ export default function Dashboard({ user, logout }) {
 
     const calc = calcular();
 
-    // Validar que no se intenten registrar horas negativas o cero (excepto en vacaciones automáticas)
-    if (calc.horas <= 0 && form.tipo !== "vacaciones") {
+    // Validar que no se intenten registrar horas negativas o cero (excepto en vacaciones automáticas o festivos)
+    if (calc.horas <= 0 && form.tipo !== "vacaciones" && form.tipo !== "festivo") {
       Swal.fire({
         icon: 'warning',
         title: 'Horas inválidas',
@@ -709,10 +713,10 @@ export default function Dashboard({ user, logout }) {
       horas: calc.horas,
       pago: calc.pago,
       tipo: form.tipo,
-      projectNumber: form.projectNumber, // Incluir número de proyecto
-      client: form.client,               // Incluir contratante
-      coordinator: form.coordinator,     // Incluir coordinador
-      proyecto: form.proyecto,
+      projectNumber: form.tipo === "festivo" ? (form.projectNumber || "N/A") : form.projectNumber,
+      client: form.tipo === "festivo" ? (form.client || "N/A") : form.client,
+      coordinator: form.tipo === "festivo" ? (form.coordinator || "N/A") : form.coordinator,
+      proyecto: form.tipo === "festivo" ? (form.proyecto || "Día Festivo") : form.proyecto,
     };
 
     try {
@@ -887,8 +891,11 @@ export default function Dashboard({ user, logout }) {
     const valorHora = sueldo / 220;
     let factor = 1.0;
     
-    if (reg.tipo === "domingo" || reg.tipo === "festivo") {
+    if (reg.tipo === "domingo") {
       factor = 1.75;
+    } else if (reg.tipo === "festivo") {
+      // Los festivos no valen horas ni pago extra según la nueva regla
+      return 0;
     }
     return Number(reg.horas) * valorHora * factor;
   };
@@ -948,6 +955,7 @@ export default function Dashboard({ user, logout }) {
             max="24"
             value={form.horas}
             onChange={(e) => setForm({ ...form, horas: e.target.value })}
+            disabled={form.tipo === "vacaciones" || form.tipo === "festivo"}
           />
 
           <select
