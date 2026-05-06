@@ -904,10 +904,6 @@ export default function Dashboard({ user, logout }) {
   const totalHoras = registrosParaMostrar.reduce((acc, r) => acc + Number(r.horas || 0), 0);
   const liquidacionProyectada = registrosParaMostrar.reduce((acc, r) => acc + Number(getCostoRegistro(r) || 0), 0);
   
-  const porcentajeCumplimiento = Math.min((totalHoras / META) * 100, 100).toFixed(1);
-  const esMetaCumplida = totalHoras >= META || (filtroEmail ? aprobados[filtroEmail] : aprobados[user.email]);
-
-  // 📊 AGRUPAR POR USUARIO PARA ADMIN
   const resumenUsuarios = todosLosUsuarios.map((u) => {
     const email = u.email;
     const registrosUser = registrosDelMes.filter((r) => r.user === email);
@@ -917,14 +913,45 @@ export default function Dashboard({ user, logout }) {
     return { email, nombre: u.nombre, cedula: u.cedula, total, honorarios: pagoTotal, rendimiento };
   });
 
-  // 📊 AGRUPAR POR PROYECTO PARA ADMIN
-  const proyectosUnicos = [...new Set(registrosDelMes.map((r) => r.proyecto || "General/Sin Proyecto"))];
-  const resumenProyectos = proyectosUnicos.map((nombreProyecto) => {
-    const registrosProyecto = registrosDelMes.filter((r) => (r.proyecto || "General/Sin Proyecto") === nombreProyecto);
-    const horasProyecto = registrosProyecto.reduce((acc, r) => acc + Number(r.horas || 0), 0);
-    const inversionProyecto = registrosProyecto.reduce((acc, r) => acc + getCostoRegistro(r), 0);
-    return { nombre: nombreProyecto, horas: horasProyecto, costo: inversionProyecto };
-  });
+  // 📈 LÓGICA DE CUMPLIMIENTO GLOBAL PARA ADMIN O INDIVIDUAL
+  let porcentajeCumplimiento;
+  let esMetaCumplida;
+  let metaDinamica;
+
+  if (user.role === "admin" && !filtroEmail) {
+    // Vista Global Admin: % de empleados que cumplieron su meta o están aprobados
+    const totalEmpleados = resumenUsuarios.length;
+    const empleadosCumplidos = resumenUsuarios.filter(u => u.total >= META || aprobados[u.email]).length;
+    porcentajeCumplimiento = totalEmpleados > 0 ? ((empleadosCumplidos / totalEmpleados) * 100).toFixed(1) : "0.0";
+    esMetaCumplida = totalEmpleados > 0 && empleadosCumplidos === totalEmpleados;
+    metaDinamica = META * totalEmpleados; // Meta global proporcional
+  } else {
+    // Vista Trabajador o Admin filtrando a uno solo
+    porcentajeCumplimiento = Math.min((totalHoras / META) * 100, 100).toFixed(1);
+    esMetaCumplida = totalHoras >= META || (filtroEmail ? aprobados[filtroEmail] : aprobados[user.email]);
+    metaDinamica = META; // Meta individual estándar
+  }
+
+  // � AGRUPAR POR PROYECTO PARA ADMIN
+  const resumenProyectos = Object.values(
+    registrosDelMes
+      .filter((r) => r.proyecto && r.proyecto !== "Día Festivo" && r.proyecto !== "General/Sin Proyecto")
+      .reduce((acc, r) => {
+        const key = `${r.proyecto}|${r.projectNumber}|${r.client}`;
+        if (!acc[key]) {
+          acc[key] = {
+            nombre: r.proyecto,
+            numero: r.projectNumber || "-",
+            cliente: r.client || "-",
+            horas: 0,
+            costo: 0,
+          };
+        }
+        acc[key].horas += Number(r.horas || 0);
+        acc[key].costo += getCostoRegistro(r);
+        return acc;
+      }, {})
+  );
 
   return (
     <div className="container">
@@ -1030,7 +1057,7 @@ export default function Dashboard({ user, logout }) {
         <div className="metric-card">
           <span className="metric-label">Horas Totales</span>
           <span className="metric-value">{totalHoras}h</span>
-          <div className="metric-sub">Meta: {META}h</div>
+          <div className="metric-sub">Meta: {metaDinamica}h</div>
         </div>
         <div className="metric-card">
           <span className="metric-label">Liquidación Proyectada</span>
@@ -1148,7 +1175,9 @@ export default function Dashboard({ user, logout }) {
           <table>
             <thead>
               <tr>
+                <th>N° Proyecto</th>
                 <th>Nombre del Proyecto</th>
+                <th>Cliente</th>
                 <th>Horas Invertidas</th>
                 <th>Costo de Inversión</th>
               </tr>
@@ -1157,14 +1186,16 @@ export default function Dashboard({ user, logout }) {
               {resumenProyectos.length > 0 ? (
                 resumenProyectos.map((p, index) => (
                   <tr key={index}>
+                    <td>{p.numero}</td>
                     <td>{p.nombre}</td>
+                    <td>{p.cliente}</td>
                     <td>{p.horas}h</td>
                     <td>{formatCOP(p.costo)}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4">No hay datos de proyectos este mes</td>
+                  <td colSpan="5">No hay datos de proyectos este mes</td>
                 </tr>
               )}
             </tbody>
