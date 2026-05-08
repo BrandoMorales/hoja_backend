@@ -920,15 +920,15 @@ export default function Dashboard({ user, logout }) {
 
   if (user.role === "admin" && !filtroEmail) {
     // Vista Global Admin: % de empleados que cumplieron su meta o están aprobados
-    const totalEmpleados = resumenUsuarios.length;
-    const empleadosCumplidos = resumenUsuarios.filter(u => u.total >= META || aprobados[u.email]).length;
+    const totalEmpleados = resumenUsuarios.length; // Total de usuarios en el mes
+    const empleadosCumplidos = resumenUsuarios.filter(u => u.total >= META).length; // Solo los que cumplen por horas
     porcentajeCumplimiento = totalEmpleados > 0 ? ((empleadosCumplidos / totalEmpleados) * 100).toFixed(1) : "0.0";
     esMetaCumplida = totalEmpleados > 0 && empleadosCumplidos === totalEmpleados;
     metaDinamica = META * totalEmpleados; // Meta global proporcional
   } else {
     // Vista Trabajador o Admin filtrando a uno solo
-    porcentajeCumplimiento = Math.min((totalHoras / META) * 100, 100).toFixed(1);
-    esMetaCumplida = totalHoras >= META || (filtroEmail ? aprobados[filtroEmail] : aprobados[user.email]);
+    porcentajeCumplimiento = ((totalHoras / META) * 100).toFixed(1);
+    esMetaCumplida = totalHoras >= META; // La barra de progreso solo refleja el cumplimiento por horas
     metaDinamica = META; // Meta individual estándar
   }
 
@@ -1057,7 +1057,7 @@ export default function Dashboard({ user, logout }) {
         <div className="metric-card">
           <span className="metric-label">Horas Totales</span>
           <span className="metric-value">{totalHoras}h</span>
-          <div className="metric-sub">Meta: {metaDinamica}h</div>
+          <div className="metric-sub">Meta Mensual: {metaDinamica}h</div>
         </div>
         <div className="metric-card">
           <span className="metric-label">Liquidación Proyectada</span>
@@ -1072,7 +1072,7 @@ export default function Dashboard({ user, logout }) {
           <div className="progress-bar">
             <div 
               className="progress-fill" 
-              style={{ width: `${porcentajeCumplimiento}%`, backgroundColor: esMetaCumplida ? '#10b981' : '#6366f1' }}
+              style={{ width: `${Math.min(Number(porcentajeCumplimiento), 100)}%`, backgroundColor: esMetaCumplida ? '#10b981' : '#6366f1' }}
             ></div>
           </div>
         </div>
@@ -1256,7 +1256,7 @@ export default function Dashboard({ user, logout }) {
       </table>
 
       {/* 📊 HISTORIAL (Visible para todos) */}
-      <div className="section-title">Historial completo</div>
+      <div className="section-title">Historial del Mes</div>
       <table>
         <thead>
           <tr>
