@@ -570,6 +570,15 @@ export default function Dashboard({ user, logout }) {
     }).format(valor || 0);
   };
 
+  // 🕒 HELPER: Formatear horas decimales a "Xh Ym"
+  const formatHoras = (decimal) => {
+    const num = Number(decimal || 0);
+    const totalMinutes = Math.round(num * 60);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  };
+
   const [form, setForm] = useState({
     fecha: "",
     horaEntrada: "06:30",
@@ -1086,7 +1095,7 @@ export default function Dashboard({ user, logout }) {
       <div className="metrics-container">
         <div className="metric-card">
           <span className="metric-label">Horas Totales</span>
-          <span className="metric-value">{totalHoras}h</span>
+          <span className="metric-value">{formatHoras(totalHoras)}</span>
           <div className="metric-sub">Meta Mensual: {metaDinamica}h</div>
         </div>
         <div className="metric-card">
@@ -1181,7 +1190,7 @@ export default function Dashboard({ user, logout }) {
                       onChange={(e) => updateSalario(u.email, e.target.value)}
                     />
                   </td>
-                  <td>{u.total}</td>
+                  <td>{formatHoras(u.total)}</td>
                   <td>{formatCOP(u.honorarios)}</td>
                   <td>{u.rendimiento}%</td>
                   <td className={u.total >= META ? "ok" : "bad"}>
@@ -1219,7 +1228,7 @@ export default function Dashboard({ user, logout }) {
                     <td>{p.numero}</td>
                     <td>{p.nombre}</td>
                     <td>{p.cliente}</td>
-                    <td>{p.horas}h</td>
+                    <td>{formatHoras(p.horas)}</td>
                     <td>{formatCOP(p.costo)}</td>
                   </tr>
                 ))
@@ -1270,7 +1279,7 @@ export default function Dashboard({ user, logout }) {
                 <td>{r.fecha.split("T")[0].split("-").reverse().join("/")}</td>
                 <td>{r.hora_entrada || "-"}</td>
                 <td>{r.hora_salida || "-"}</td>
-                <td>{r.horas}</td>
+                <td>{formatHoras(r.horas)}</td>
                 <td>{r.tipo}</td>
                 <td>{r.projectNumber || "-"}</td>
                 <td>{r.proyecto || "-"}</td>
@@ -1316,7 +1325,7 @@ export default function Dashboard({ user, logout }) {
               <td>{r.fecha.split("T")[0].split("-").reverse().join("/")}</td>
               <td>{r.hora_entrada || "-"}</td>
               <td>{r.hora_salida || "-"}</td>
-              <td>{r.horas}</td>
+              <td>{formatHoras(r.horas)}</td>
               <td>{r.tipo}</td>
               <td>{r.projectNumber || "-"}</td>
               <td>{r.proyecto || "-"}</td>
