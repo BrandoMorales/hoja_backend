@@ -56,6 +56,8 @@ CREATE TABLE records (
     user_email VARCHAR(255) NOT NULL,
     nombre VARCHAR(255) NOT NULL,
     fecha DATE NOT NULL,
+    hora_entrada TIME,
+    hora_salida TIME,
     horas DECIMAL(10, 2) NOT NULL,
     pago DECIMAL(15, 2) NOT NULL,
     tipo VARCHAR(50) NOT NULL,

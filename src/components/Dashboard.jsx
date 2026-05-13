@@ -572,7 +572,8 @@ export default function Dashboard({ user, logout }) {
 
   const [form, setForm] = useState({
     fecha: "",
-    horas: "",
+    horaEntrada: "06:30",
+    horaSalida: "16:30",
     tipo: "normal",
     proyecto: "",
     projectNumber: "", // Nuevo: Número de proyecto
@@ -633,7 +634,26 @@ export default function Dashboard({ user, logout }) {
     const sueldoActual = Number(salarios[user.email] || 0);
     const VALOR_HORA_BASE = sueldoActual / 220; 
 
-    let horas = Number(form.horas || 0);
+    let horas = 0;
+
+    if (form.horaEntrada && form.horaSalida && form.tipo !== "vacaciones" && form.tipo !== "festivo") {
+      const [hIn, mIn] = form.horaEntrada.split(":").map(Number);
+      const [hOut, mOut] = form.horaSalida.split(":").map(Number);
+      
+      const inicioDecimal = hIn + mIn / 60;
+      const finDecimal = hOut + mOut / 60;
+      let diff = finDecimal - inicioDecimal;
+
+      // Descuento Break (09:00 - 09:15)
+      const traslapeBreak = Math.max(0, Math.min(finDecimal, 9.25) - Math.max(inicioDecimal, 9.0));
+      
+      // Descuento Almuerzo (12:00 - 13:00)
+      const traslapeAlmuerzo = Math.max(0, Math.min(finDecimal, 13.0) - Math.max(inicioDecimal, 12.0));
+
+      // Calculamos horas netas redondeando a 2 decimales
+      horas = Math.max(0, diff - traslapeBreak - traslapeAlmuerzo);
+    }
+
     let factorRecargo = 1.0; // Valor por defecto (100%)
 
     const [year, month, day] = form.fecha.split('-').map(Number);
@@ -662,7 +682,7 @@ export default function Dashboard({ user, logout }) {
   // 🔹 AGREGAR
   const agregar = async () => {
     // Permitimos agregar sin horas si es vacaciones o festivo
-    if (!form.fecha || (form.tipo !== "vacaciones" && form.tipo !== "festivo" && !form.horas)) {
+    if (!form.fecha || (!form.horaEntrada && form.tipo !== "vacaciones" && form.tipo !== "festivo")) {
       Swal.fire({
         icon: 'error',
         title: 'Campos incompletos',
@@ -710,6 +730,8 @@ export default function Dashboard({ user, logout }) {
       user: user.email,
       nombre: user.nombre,
       fecha: form.fecha,
+      hora_entrada: form.horaEntrada,
+      hora_salida: form.horaSalida,
       horas: calc.horas,
       pago: calc.pago,
       tipo: form.tipo,
@@ -734,7 +756,8 @@ export default function Dashboard({ user, logout }) {
         Swal.fire({ icon: 'success', title: 'Registro guardado', timer: 1000, showConfirmButton: false });
         setForm({
           fecha: "",
-          horas: "",
+          horaEntrada: "06:30",
+          horaSalida: "16:30",
           tipo: "normal",
           projectNumber: "",
           client: "",
@@ -975,15 +998,22 @@ export default function Dashboard({ user, logout }) {
             }
           />
 
-          <input
-            type="number"
-            placeholder="Horas"
-            min="0"
-            max="24"
-            value={form.horas}
-            onChange={(e) => setForm({ ...form, horas: e.target.value })}
-            disabled={form.tipo === "vacaciones" || form.tipo === "festivo"}
-          />
+          <div className="time-inputs" style={{ display: 'flex', gap: '5px' }}>
+            <input
+              type="time"
+              title="Hora de Entrada"
+              value={form.horaEntrada}
+              onChange={(e) => setForm({ ...form, horaEntrada: e.target.value })}
+              disabled={form.tipo === "vacaciones" || form.tipo === "festivo"}
+            />
+            <input
+              type="time"
+              title="Hora de Salida"
+              value={form.horaSalida}
+              onChange={(e) => setForm({ ...form, horaSalida: e.target.value })}
+              disabled={form.tipo === "vacaciones" || form.tipo === "festivo"}
+            />
+          </div>
 
           <select
             value={form.tipo}
@@ -1220,6 +1250,8 @@ export default function Dashboard({ user, logout }) {
             <th>Nombre</th>
             <th>Email</th>
             <th>Fecha</th>
+            <th>Entrada</th>
+            <th>Salida</th>
             <th>Horas</th>
             <th>Tipo</th>
             <th>N° Proyecto</th> {/* Nuevo */}
@@ -1236,6 +1268,8 @@ export default function Dashboard({ user, logout }) {
                 <td>{r.nombre}</td>
                 <td>{r.user}</td>
                 <td>{r.fecha.split("T")[0].split("-").reverse().join("/")}</td>
+                <td>{r.hora_entrada || "-"}</td>
+                <td>{r.hora_salida || "-"}</td>
                 <td>{r.horas}</td>
                 <td>{r.tipo}</td>
                 <td>{r.projectNumber || "-"}</td>
@@ -1250,7 +1284,7 @@ export default function Dashboard({ user, logout }) {
               </tr>
             ))
           ) : (
-            <tr><td colSpan={user.role === "admin" ? 10 : 9} style={{textAlign: 'center'}}>No hay registros para este día</td></tr>
+            <tr><td colSpan={user.role === "admin" ? 12 : 11} style={{textAlign: 'center'}}>No hay registros para este día</td></tr>
           )}
         </tbody>
       </table>
@@ -1263,6 +1297,8 @@ export default function Dashboard({ user, logout }) {
             <th>Nombre</th>
             <th>Email</th>
             <th>Fecha</th>
+            <th>Entrada</th>
+            <th>Salida</th>
             <th>Horas</th>
             <th>Tipo</th>
             <th>N° Proyecto</th> {/* Nuevo */}
@@ -1278,6 +1314,8 @@ export default function Dashboard({ user, logout }) {
               <td>{r.nombre}</td>
               <td>{r.user}</td>
               <td>{r.fecha.split("T")[0].split("-").reverse().join("/")}</td>
+              <td>{r.hora_entrada || "-"}</td>
+              <td>{r.hora_salida || "-"}</td>
               <td>{r.horas}</td>
               <td>{r.tipo}</td>
               <td>{r.projectNumber || "-"}</td>
