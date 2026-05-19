@@ -945,7 +945,7 @@ export default function Dashboard({ user, logout }) {
   if (user.role === "admin" && !filtroEmail) {
     // Vista Global Admin: % de empleados que cumplieron su meta o están aprobados
     const totalEmpleados = resumenUsuarios.length; // Total de usuarios en el mes
-    const empleadosCumplidos = resumenUsuarios.filter(u => u.total >= META).length; // Solo los que cumplen por horas
+    const empleadosCumplidos = resumenUsuarios.filter(u => u.total >= META || aprobados[u.email]).length;
     porcentajeCumplimiento = totalEmpleados > 0 ? ((empleadosCumplidos / totalEmpleados) * 100).toFixed(1) : "0.0";
     esMetaCumplida = totalEmpleados > 0 && empleadosCumplidos === totalEmpleados;
     metaDinamica = META * totalEmpleados; // Meta global proporcional
