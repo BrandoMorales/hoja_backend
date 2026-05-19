@@ -587,7 +587,6 @@ export default function Dashboard({ user, logout }) {
     proyecto: "",
     projectNumber: "", // Nuevo: Número de proyecto
     client: "",        // Nuevo: Contratante (Razón Social)
-    coordinator: "",   // Nuevo: Coordinador (persona que invirtió tiempo)
   });
 
   const META = 220;
@@ -653,14 +652,9 @@ export default function Dashboard({ user, logout }) {
       const finDecimal = hOut + mOut / 60;
       let diff = finDecimal - inicioDecimal;
 
-      // Descuento Break (09:00 - 09:15)
-      const traslapeBreak = Math.max(0, Math.min(finDecimal, 9.25) - Math.max(inicioDecimal, 9.0));
-      
-      // Descuento Almuerzo (12:00 - 13:00)
-      const traslapeAlmuerzo = Math.max(0, Math.min(finDecimal, 13.0) - Math.max(inicioDecimal, 12.0));
-
-      // Calculamos horas netas redondeando a 2 decimales
-      horas = Math.max(0, diff - traslapeBreak - traslapeAlmuerzo);
+      // Según requerimiento: la jornada es de 10 horas completas.
+      // No se descuenta el break ni el almuerzo del total de horas.
+      horas = Math.max(0, diff);
     }
 
     let factorRecargo = 1.0; // Valor por defecto (100%)
@@ -671,7 +665,7 @@ export default function Dashboard({ user, logout }) {
     const esFinDeSemana = diaSemana === 0 || diaSemana === 6;
 
     if (form.tipo === "vacaciones") {
-      horas = esFinDeSemana ? 0 : 8;
+      horas = esFinDeSemana ? 0 : 10;
       factorRecargo = 1.0;
     } else if (form.tipo === "festivo") {
       // Festivos no se trabajan según requerimiento
@@ -746,7 +740,6 @@ export default function Dashboard({ user, logout }) {
       tipo: form.tipo,
       projectNumber: form.tipo === "festivo" ? (form.projectNumber || "N/A") : form.projectNumber,
       client: form.tipo === "festivo" ? (form.client || "N/A") : form.client,
-      coordinator: form.tipo === "festivo" ? (form.coordinator || "N/A") : form.coordinator,
       proyecto: form.tipo === "festivo" ? (form.proyecto || "Día Festivo") : form.proyecto,
     };
 
@@ -770,7 +763,6 @@ export default function Dashboard({ user, logout }) {
           tipo: "normal",
           projectNumber: "",
           client: "",
-          coordinator: "",
           proyecto: "",
         });
       } else {
@@ -1063,18 +1055,6 @@ export default function Dashboard({ user, logout }) {
             ))}
           </select>
 
-          <select
-            value={form.coordinator}
-            onChange={(e) => setForm({ ...form, coordinator: e.target.value })}
-          >
-            <option value="">Seleccione Responsable</option>
-            {todosLosUsuarios.map((u) => (
-              <option key={u.email} value={u.nombre}>
-                {u.nombre}
-              </option>
-            ))}
-          </select>
-
           <button onClick={agregar}>Agregar</button>
       </div>
 
@@ -1160,6 +1140,7 @@ export default function Dashboard({ user, logout }) {
 
           {/* 📋 RESUMEN POR PERSONA */}
           <div className="section-title">Estado de Usuarios</div>
+          <div className="table-wrapper">
           <table>
             <thead>
               <tr>
@@ -1208,9 +1189,11 @@ export default function Dashboard({ user, logout }) {
               ))}
             </tbody>
           </table>
+          </div>
 
           {/* 📁 INVERSIÓN POR PROYECTO */}
           <div className="section-title">Análisis de Inversión por Proyecto</div>
+          <div className="table-wrapper">
           <table>
             <thead>
               <tr>
@@ -1239,6 +1222,7 @@ export default function Dashboard({ user, logout }) {
               )}
             </tbody>
           </table>
+          </div>
 
           <div style={{ textAlign: 'right', marginBottom: '20px' }}>
             <button className="danger" onClick={eliminarTodo}>
@@ -1253,6 +1237,7 @@ export default function Dashboard({ user, logout }) {
         Registros del día: {fechaSeleccionada.toLocaleDateString()}
       </div>
 
+      <div className="table-wrapper">
       <table>
         <thead>
           <tr>
@@ -1266,7 +1251,6 @@ export default function Dashboard({ user, logout }) {
             <th>N° Proyecto</th> {/* Nuevo */}
             <th>Nombre Proyecto</th>
             <th>Contratante</th> {/* Nuevo */}
-            <th>Responsable</th> {/* Nuevo */}
             {user.role === "admin" && <th>Acción</th>}
           </tr>
         </thead>
@@ -1284,7 +1268,6 @@ export default function Dashboard({ user, logout }) {
                 <td>{r.projectNumber || "-"}</td>
                 <td>{r.proyecto || "-"}</td>
                 <td>{r.client || "-"}</td>
-                <td>{r.coordinator || "-"}</td>
                 {user.role === "admin" && (
                   <td>
                     <button className="danger" onClick={() => eliminar(r.id, r.user)}>❌</button>
@@ -1293,13 +1276,15 @@ export default function Dashboard({ user, logout }) {
               </tr>
             ))
           ) : (
-            <tr><td colSpan={user.role === "admin" ? 12 : 11} style={{textAlign: 'center'}}>No hay registros para este día</td></tr>
+            <tr><td colSpan={user.role === "admin" ? 11 : 10} style={{textAlign: 'center'}}>No hay registros para este día</td></tr>
           )}
         </tbody>
       </table>
+      </div>
 
       {/* 📊 HISTORIAL (Visible para todos) */}
       <div className="section-title">Historial del Mes</div>
+      <div className="table-wrapper">
       <table>
         <thead>
           <tr>
@@ -1313,7 +1298,6 @@ export default function Dashboard({ user, logout }) {
             <th>N° Proyecto</th> {/* Nuevo */}
             <th>Nombre Proyecto</th>
             <th>Contratante</th> {/* Nuevo */}
-            <th>Responsable</th> {/* Nuevo */}
             {user.role === "admin" && <th>Acción</th>}
           </tr>
         </thead>
@@ -1330,7 +1314,6 @@ export default function Dashboard({ user, logout }) {
               <td>{r.projectNumber || "-"}</td>
               <td>{r.proyecto || "-"}</td>
               <td>{r.client || "-"}</td>
-              <td>{r.coordinator || "-"}</td>
               {user.role === "admin" && (
                 <td>
                   <button className="danger" onClick={() => eliminar(r.id, r.user)}>❌</button>
@@ -1340,6 +1323,7 @@ export default function Dashboard({ user, logout }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

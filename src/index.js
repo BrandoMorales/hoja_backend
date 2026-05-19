@@ -86,7 +86,7 @@ app.get('/api/users', async (req, res) => {
 app.get('/api/records', async (req, res) => {
   const { email, role } = req.query;
   try { 
-    let query = "SELECT id, user_email AS user, nombre, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client, coordinator FROM records"; // Añadir nuevos campos
+    let query = "SELECT id, user_email AS user, nombre, DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client FROM records"; // Eliminado 'coordinator'
     let params = [];
     if (role !== 'admin') {
       query += " WHERE user_email = ?";
@@ -101,11 +101,11 @@ app.get('/api/records', async (req, res) => {
 });
 
 app.post('/api/records', async (req, res) => {
-  const { user, nombre, fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client, coordinator } = req.body; // Añadir nuevos campos
+  const { user, nombre, fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client } = req.body; // Eliminado 'coordinator'
   try {
     const [result] = await pool.execute(
-      'INSERT INTO records (user_email, nombre, fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client, coordinator) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', // Insertar nuevos campos
-      [user, nombre, fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client, coordinator]
+      'INSERT INTO records (user_email, nombre, fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', // Eliminado 'coordinator'
+      [user, nombre, fecha, hora_entrada, hora_salida, horas, pago, tipo, proyecto, projectNumber, client]
     );
     res.status(201).json({ id: result.insertId, ...req.body });
   } catch (error) {

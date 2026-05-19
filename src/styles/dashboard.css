@@ -124,14 +124,22 @@ button:hover {
   font-weight: bold;
 }
 
-/* 📊 TABLAS */
+/* 📦 WRAPPER PARA TABLAS SCROLLABLES */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #111827;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/*  TABLAS */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #111827;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 25px;
+  min-width: 1000px; /* Asegura un ancho mínimo para que las columnas no se colapsen */
+  margin-bottom: 0;
 }
 
 th {
@@ -145,10 +153,9 @@ th,
 td {
   padding: 12px;
   text-align: center;
-}
-
-td {
   font-size: 14px;
+  word-break: break-word; /* Rompe palabras largas (como emails o proyectos) */
+  white-space: normal;    /* Permite el salto de línea */
 }
 
 tr:nth-child(even) {
@@ -265,13 +272,9 @@ tr:nth-child(even) {
     grid-template-columns: 1fr;
   }
 
+  /* Forzamos un poco más de ancho en móvil para mejor legibilidad al hacer scroll */
   table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    font-size: 13px;
-    white-space: nowrap;
+    min-width: 1200px;
   }
 
   button {
