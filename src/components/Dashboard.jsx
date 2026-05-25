@@ -652,9 +652,8 @@ export default function Dashboard({ user, logout }) {
       const finDecimal = hOut + mOut / 60;
       let diff = finDecimal - inicioDecimal;
 
-      // Según requerimiento: la jornada es de 10 horas completas.
-      // No se descuenta el break ni el almuerzo del total de horas.
-      horas = Math.max(0, diff);
+      // Se descuenta 1 hora de almuerzo del total de horas trabajadas.
+      horas = Math.max(0, diff - 1);
     }
 
     let factorRecargo = 1.0; // Valor por defecto (100%)
@@ -665,7 +664,7 @@ export default function Dashboard({ user, logout }) {
     const esFinDeSemana = diaSemana === 0 || diaSemana === 6;
 
     if (form.tipo === "vacaciones") {
-      horas = esFinDeSemana ? 0 : 10;
+      horas = esFinDeSemana ? 0 : 9;
       factorRecargo = 1.0;
     } else if (form.tipo === "festivo") {
       // Festivos no se trabajan según requerimiento

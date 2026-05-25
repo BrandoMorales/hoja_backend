@@ -11,7 +11,7 @@ Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/E
 - **Lógica de Nómina Colombiana:**
   - Cálculo basado en el divisor de **220 horas mensuales**.
   - Recargos automáticos del **75% (factor 1.75)** para domingos y festivos.
-  - Cálculo automático de horas de vacaciones (10h en días hábiles).
+  - Cálculo automático de horas de vacaciones (9h en días hábiles).
 - **Panel de Administrador:**
   - Visualización de métricas en tiempo real (KPIs).
   - Asignación dinámica de salarios base por trabajador.
