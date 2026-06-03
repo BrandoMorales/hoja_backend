@@ -589,7 +589,7 @@ export default function Dashboard({ user, logout }) {
     client: "",        // Nuevo: Contratante (Razón Social)
   });
 
-  const META = 220;
+  const META = 200;
 
   // 🔥 FUNCIÓN PARA CARGAR REGISTROS SEGÚN EL ROL
   const loadRegistros = async () => {
@@ -640,7 +640,7 @@ export default function Dashboard({ user, logout }) {
     
     // Usamos el sueldo configurado para el usuario actual (o 0 si no hay)
     const sueldoActual = Number(salarios[user.email] || 0);
-    const VALOR_HORA_BASE = sueldoActual / 220; 
+    const VALOR_HORA_BASE = sueldoActual / META; 
 
     let horas = 0;
 
@@ -911,7 +911,7 @@ export default function Dashboard({ user, logout }) {
   // 📅 CÁLCULO DE COSTOS REALES SEGÚN SALARIO CONFIGURADO
   const getCostoRegistro = (reg) => {
     const sueldo = Number(salarios[reg.user] || 0);
-    const valorHora = sueldo / 220;
+    const valorHora = sueldo / META;
     let factor = 1.0;
     
     if (reg.tipo === "domingo") {
