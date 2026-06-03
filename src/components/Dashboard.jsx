@@ -589,7 +589,7 @@ export default function Dashboard({ user, logout }) {
     client: "",        // Nuevo: Contratante (Razón Social)
   });
 
-  const META = 190;
+  const META = 186;
 
   // 🔥 FUNCIÓN PARA CARGAR REGISTROS SEGÚN EL ROL
   const loadRegistros = async () => {
