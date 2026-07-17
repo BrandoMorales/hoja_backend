@@ -9,7 +9,7 @@ Este proyecto utiliza un stack moderno con **React** en el frontend, **Node.js/E
 - **Autenticación Segura:** Registro e inicio de sesión con roles diferenciados (Administrador y Trabajador).
 - **Gestión de Horas:** Registro detallado de jornadas (Normal, Festivo, Sábado, Domingo, Vacaciones).
 - **Lógica de Nómina Colombiana:**
-  - Cálculo basado en el divisor de **200 horas mensuales**.
+  - Cálculo basado en el divisor de **175 horas mensuales**.
   - Recargos automáticos del **75% (factor 1.75)** para domingos y festivos.
   - Cálculo automático de horas de vacaciones (9h en días hábiles).
 - **Panel de Administrador:**
@@ -94,4 +94,4 @@ npm run dev
 ## ⚙️ Lógica de Cálculo
 
 El sistema calcula el costo de cada registro mediante la fórmula:
-`Costo = (Salario Base / 200) * Horas * FactorRecargo`
+`Costo = (Salario Base / 175) * Horas * FactorRecargo`

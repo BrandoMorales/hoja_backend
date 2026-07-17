@@ -581,7 +581,7 @@ export default function Dashboard({ user, logout }) {
 
   const [form, setForm] = useState({
     fecha: "",
-    horaEntrada: "06:30",
+    horaEntrada: "07:00",
     horaSalida: "16:30",
     tipo: "normal",
     proyecto: "",
@@ -757,7 +757,7 @@ export default function Dashboard({ user, logout }) {
         Swal.fire({ icon: 'success', title: 'Registro guardado', timer: 1000, showConfirmButton: false });
         setForm({
           fecha: "",
-          horaEntrada: "06:30",
+          horaEntrada: "07:00",
           horaSalida: "16:30",
           tipo: "normal",
           projectNumber: "",
